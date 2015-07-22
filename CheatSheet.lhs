@@ -522,54 +522,52 @@ le code source dans votre interpréteur pour tester les exemples inclus.
 
 > (##) :: String -> String -> String
 
-  Allowable symbols which can be used to define operators are:
+  Les symboles autorisés pour définir des opérateurs sont les suivants:
 
 < # $ % & * + . / < = > ? @ \ ^ | - ~
 
-  However, there are several ``operators'' which cannot be redefined. They are:
-  @<-@, @->@ and @=@. The last, @=@, cannot be redefined by itself, but can be
-  used as part of multi-character operator. The ``bind'' function, @>>=@, is one
-  example.
+  Cependant, il y a plusieurs ``opérateurs'' qui ne peuvent pas être rédéfinis. Ce sont:
+  @<-@, @->@ and @=@. Le dernier, @=@, ne peut pas être redéfini seul, mais peut faire partie
+  d'un opérateur multi-caractères. La fonction ``bind'', @>>=@ en est un exemple.
 
-  \sshd{Precedence \& Associativity}\label{fixity}
+  \sshd{Précédence \& Associativité}\label{fixity}
 
-  The precedence and associativity, collectively called \emph{fixity}, of any
-  operator can be set through the @infix@, @infixr@ and @infixl@ keywords. These
-  can be applied both to top-level functions and to local definitions. The
-  syntax is:
+  La précédence et l'associativité, appelés collectivement \emph{fixité}, de n'importe quel
+  opérateur peut être affectée grâce aux mots réservés @infix@, @infixr@ et @infixl@. Ceux-ci
+  peuvent être appliqués à la fois aux fonctions de plus haut niveau et aux définitions locales.
+ La syntaxe est la suivante:
 
 \bigskip
   \textbraceleft\texttt{infix} || \texttt{infixr} || \texttt{infixl}\textbraceright\ \emph{precedence op}
 \bigskip
 
-  \noindent where \emph{precedence} varies from 0 to 9. \emph{Op} can actually
-  be any function which takes two arguments (i.e., any binary operation).
-  Whether the operator is left or right associative is specified by @infixl@ or
-  @infixr@, respectively. Such @infix@ declarations have no associativity.
+  \noindent où \emph{precedence} varie de 0 à 9. \emph{Op} peut être de fait
+  n'importe quelle fonction prenant deux arguments (càd, n'immporte quelle opération binaire).
+  Le fait que l'opérateur soit associatif à gauche ou à droite est spécifié par @infixl@ ou
+  @infixr@, respectivement. De telles déclarations @infix@ n'ont pas d'associativité.
 
-  Precedence and associativity make many of the rules of arithmetic work ``as
-  expected.'' For example, consider these minor updates to the precedence of
-  addition and multiplication:
+  La Précédence et l'associativité permettent de faire fonctionner toutes les règles de l'arithmétique ``tel qu'attendu.''
+  Par exemple, considérez les mises à jour mineures de précédence entre addition et multiplication:
 
 > infixl 8 `plus1`
 > plus1 a b = a + b
 > infixl 7 `mult1`
 > mult1 a b = a * b
 
-  The results are surprising:
+  Les résultats sont surprenants:
 
 < > 2 + 3 * 5
 < 17
 < > 2 `plus1` 3 `mult1` 5
 < 25
 
-  Reversing associativity also has interesting effects. Redefining division as
-  right associative:
+  L'associativité inverse n'a pas d'effets intéressants. En redéfinissant la division pour la rendre associative
+  à droite:
 
 > infixr 7 `div1`
 > div1 a b = a / b
 
-  We get interesting results:
+  On obtient des résultats intéréssants:
 
 < > 20 / 2 / 2
 < 5.0
@@ -578,17 +576,16 @@ le code source dans votre interpréteur pour tester les exemples inclus.
 
 \shd{Currying}\label{currying}
 
- In Haskell, functions do not have to get all of their arguments at once. For
- example, consider the @convertOnly@ function, which only converts certain
- elements of string depending on a test:
+ En Haskell, les fonctions ne doivent pas forcément recevoir l'ensemble de leurs arguments en une seule fois. Par
+ exemple, considérez la fonction @convertOnly@, qui convertit certains éléments en chaînes de caractères en fonction
+ d'un test:
 
 > convertOnly test change str =
 >     map (\c -> if test c
 >                 then change c
 >                 else c) str
 
- Using @convertOnly@, we can write the @l33t@ function which converts certain
- letters to numbers:
+ En utilisant @convertOnly@, on peut écrire la fonction @l33t@ qui convertit certaines lettres en nombres:
 
 > l33t = convertOnly isL33t toL33t
 >   where
@@ -601,149 +598,146 @@ le code source dans votre interpréteur pour tester les exemples inclus.
 >     -- etc.
 >     toL33t c = c
 
- Notice that @l33t@ has no arguments specified. Also, the final argument to
- @convertOnly@ is not given. However, the type signature of @l33t@ tells the
- whole story:
+ Notez que @l33t@ n'a pas d'arguments. Par ailleurs, le dernier argument à @convertOnly@ n'est pas donné. Cependant,
+ la signature du type @l33t@ nous aide:
 
 < l33t :: String -> String
 
- That is, @l33t@ takes a string and produces a string. It is a ``constant'', in
- the sense that @l33t@ always returns a value that is a function which takes a
- string and produces a string. @l33t@ returns a ``curried'' form of
- @convertOnly@, where only two of its three arguments have been supplied.
+ Donc, @l33t@ prends une chaîne et produit une chaîne. C'est une ``constante'',
+ au sens que @l33t@ retourne toujours comme valeur une fonction prenant une chaîne et produisant une chaîne.
+ @l33t@ retourne une forme ``curried'' de @convertOnly@, où seuls deux de ses trois arguments ont été fournis.
 
- This can be taken further. Say we want to write a function which only changes
- upper case letters. We know the test to apply, @isUpper@, but we don't want to
- specify the conversion. That function can be written as:
+ Ceci peut être poussé plus avant. Disons que l'on souhaite écrire une fonction qui change seulement les lettres majuscules.
+ Nous connaissons le test à appliquer (@isUpper@), mais on ne souhaite pas spécifier la conversion.
+ Cette fonction peut être écrite comme suit:
 
 > convertUpper = convertOnly isUpper
 
- which has the type signature:
+ qui a la signature de type:
 
 < convertUpper :: (Char -> Char)
 <   -> String -> String
 
- That is, @convertUpper@ can take two arguments. The first is the conversion
- function which converts individual characters and the second is the string to
- be converted.
+ @convertUpper@ peut donc prendre deux arguments. Le premier est la fonction de conversion de
+ caractères et la seconde correspond à la chaîne à convertir.
 
- A curried form of any function which takes multiple arguments can be created.
- One way to think of this is that each ``arrow'' in the function's signature
- represents a new function which can be created by supplying one more argument.
+ Une forme curryfiée de la fonction multi-arguments peut être définie.
+ Une façon de voir cela est que chaque ``flèche'' dans la signature de la fonction représente
+ une nouvelle fonction qui peut être définie en lui fournissant un argument supplémentaire.
 
  \sshd{Sections}\label{sections}
 
- Operators are functions, and they can be curried like any other. For example, a
- curried version of ``@+@'' can be written as:
+ Les opérateurs sont des fonctions, et ils peuvent être currifiés comme n'importe quelle autre fonction. Par exemple, une
+ version currifiée de ``@+@'' peut être écrite comme suit:
 
 < add10 = (+) 10
 
- However, this can be unwieldy and hard to read. ``Sections'' are curried
- operators, using parentheses. Here is @add10@ using sections:
+ Cependant, cela peut être compliqué et difficile à lire. Les ``Sections'' sont des opérateurs currifiés, en utilisant
+ des parenthèses. Voici la fonction @add10@ avec des sections:
 
 > add10 = (10 +)
 
- The supplied argument can be on the right or left, which indicates what
- position it should take. This is important for operations such as
- concatenation:
+ L'argument fourni peut l'être à gauche ou à droite, ce qui indique la position qu'il doit prendre. C'est important
+ pour des opérations comme la concaténation:
 
 > onLeft str = (++ str)
 > onRight str = (str ++)
 
- Which produces quite different results:
+ Ces fonctions produisent des résultats assez différents:
 
 < > onLeft "foo" "bar"
 < "barfoo"
 < > onRight "foo" "bar"
 < "foobar"
 
-\shd{``Updating'' values and record syntax}\label{updating}
+\shd{``Modifier'' des valeurs et syntaxe des enregistrements}\label{updating}
 
-  Haskell is a pure language and, as such, has no mutable state. That is, once a
-  value is set it never changes. ``Updating'' is really a copy operation, with
-  new values in the fields that ``changed.'' For example, using the @Color@ type
-  defined earlier, we can write a function that sets the @green@ field to zero
-  easily:
+  Haskell est un langage pur et en tant que tel, il ne gère pas la modification d'état. Donc,
+  une fois une valeur affectée, elle ne peut pas changer. La ``modification'' est en réalité
+  une opération de copie, avec de nouvelles valeurs dans les champs ``modifiés.'' Par exemple,
+  en utilisant le type @Color@ défini auparavant, on peut écrire une fonction qui positionne
+  le champs @green@ à zéro facilement:
 
 > noGreen1 (C r _ b) = C r 0 b
 
-  The above is a bit verbose and can be rewritten using record syntax. This kind
-  of ``update'' only sets values for the field(s) specified and copies the rest:
+  Ceci est un peu verbeux et peut être réécrit en utilisant la syntaxe des enregistrements. Ce
+  type de ``mise à jour'' positionne uniquement les champs spécifiés et copie le reste:
 
 > noGreen2 c = c { green = 0 }
 
-  Here we capture the @Color@ value in @c@ and return a new @Color@ value.  That
-  value happens to have the same value for @red@ and @blue@ as @c@ and it's
-  @green@ component is 0. We can combine this with pattern matching to set the
-  @green@ and @blue@ fields to equal the @red@ field:
+  Ici on capture la valeur de @Color@ dans @c@ et on retourne une nouvelle valeur de type @Color@.  Cette
+  valeur @c@ aura la même valeur pour @red@ et @blue@ et sa composante @green@ à 0.
+  On peut combiner ceci avec des motifs de correspondance afin d'affecter les champs
+  @green@ et @blue@ fields de manière à être égal au champs @red@:
 
 > makeGrey c@(C { red = r }) =
 >   c { green = r, blue = r }
 
-  Notice we must use argument capture (``|c@|'') to get the @Color@ value and
-  pattern matching with record syntax (``|C { red = r}|'') to get the inner
-  @red@ field.
+  Notez que l'on doit utiliser la capture d'argument (``|c@|'') pour accéder à la valeur de @Color@ et
+  utiliser un motif de correspondance avec la syntaxe d'enregistrement (``|C { red = r}|'') afin d'obtenir
+  le champs interne @red@.
 
-\shd{Anonymous Functions}\label{anonymous-functions}
+\shd{Fonctions Anonymes}\label{anonymous-functions}
 
-  An anonymous function (i.e., a \emph{lambda expression} or \emph{lambda} for
-  short), is a function without a name. They can be defined at any time like so:
+  Une fonction anonyme (càd, une \emph{expression lambda} ou encore \emph{lambda} en forme raccourcie), est une
+  fonction sans nom. Elle peut être définie à n'importe quel endroit comme ici:
 
 < \c -> (c, c)
 
-  which defines a function that takes an argument and returns a tuple
-  containing that argument in both positions. They are useful for simple
-  functions which don't need a name. The following determines if a string
-  consists only of mixed case letters and whitespace.
+  qui définit une fonction prenant un argument et retournant un tuplet
+  contenant ledit argument aux deux emplacements. Elles sont utiles pour
+  des fonctions simples ne nécessitant pas de nom. Ce qui suit détermine si
+  une chaîne contient un mélange de lettres minuscules/majuscules ainsi que
+  d'espaces.
 
 > mixedCase str =
 >   all (\c -> isSpace c ||
 >              isLower c ||
 >              isUpper c) str
 
-  Of course, lambdas can be the returned from functions too. This classic
-  returns a function which will then multiply its argument by the one originally
-  given:
+  Bien sûr, les expressions lambdas peuvent être retournées également à partir de fonctions. Cet exemple classique
+  retourne une fonction qui multipliera son argument par celui donné à l'origine:
 
 > multBy n = \m -> n * m
 
-  For example:
+  Par exemple:
 
 < > let mult10 = multBy 10
 < > mult10 10
 < 100
 
-\shd{Type Signatures}\label{type-signatures}
+\shd{Signatures}\label{type-signatures}
 
-  Haskell supports full type inference, meaning in most cases no types have to
-  be written down. Type signatures are still useful for at least two reasons.
+  Haskell implémente une inférence de type complète, ce qui veut dire que dans la
+  plupart des cas, il n'est pas nécéssaire de préciser les types. Les signatures
+  de type sont néanmoins toujours utiles pour au moins deux raisons:
 
   \begin{description}
-  \item{\emph{Documentation}}---Even if the compiler can figure out the types
-  of your functions, other programmers or even yourself might not be able to
-  later. Writing the type signatures on all top-level functions is considered
-  very good form.
+  \item{\emph{Documentation}}---Même si le compilateur peut déterminer les types
+  de vos fonctions, d'autres programmeurs ou vous  même pourriez ne  pas en être
+  capables plus tard. Ecrire la signature (de type) sur toutes les fonctions de plus
+  haut niveau est considérée comme une bonne pratique.
 
-  \item{\emph{Specialization}}---Typeclasses allow functions with overloading.
-  For example, a function to negate any list of numbers has the signature:
+  \item{\emph{Spécialisation}}---Les types de classes (Typeclasses) permettent de surcharger *
+   les fonctions.
+  Par exemple, une fonction consistant à inverser le signe de n'importe quelle liste de nombres à la signature:
 
 < negateAll :: Num a => [a] -> [a]
 
-  However, for efficiency or other reasons you may only want to allow @Int@
-  types. You would accomplish that with a type signature:
+  Cependant, pour notamment des raisons d'efficacité, vous pourriez vouloir n'autoriser
+  que les types @Int@. Vous pourriez accomplir ceci avec la signature de type:
 
 < negateAll :: [Int] -> [Int]
   \end{description}
 
-  Type signatures can appear on top-level functions and nested @let@ or @where@
-  definitions. Generally this is useful for documentation, although in some
-  cases they are needed to prevent polymorphism. A type signature is first the
-  name of the item which will be typed, followed by a @::@, followed by the
-  types. An example of this has already been seen above.
+  Les signatures de Type peuvent apparaître pour les fonctions de plus haut niveau et les définitions @let@ ou @where@
+  imbriquées. Généralement, ceci est utile pour la documentation, bien que dans certains cas, elles sont necéssaires
+  pour empêcher le polymorphisme. Une signature de type est en premier lieu consituée du nom de l'élément à typer, suivi
+  par un @::@, finalement suivi par le type. Un exemple de ceci a déjà été vu auparavant.
 
-  Type signatures do not need to appear directly above their implementation.
-  They can be specified anywhere in the containing module (yes, even below!).
-  Multiple items with the same signature can also be defined together:
+  Les signatures de Type n'ont pas besoin d'apparaître directement au dessus de leur implémentation.
+  Ils peuvent être spécifiés n'importe où dans le module contenant (oui, même en dessous!).
+  Plusieurs éléménts avec la même signature peuvent également être définis ensemble:
 
 > pos, neg :: Int -> Int
 
@@ -755,37 +749,36 @@ le code source dans votre interpréteur pour tester les exemples inclus.
 > neg y | y > 0 = negate y
 >       | otherwise = y
 
-  \sshd{Type Annotations}\label{type-annotations}
+  \sshd{Annotations de Type}\label{type-annotations}
 
-  Sometimes Haskell cannot determine what type is meant. The classic
-  demonstration of this is the so-called ``@show . read@'' problem:
+  Parfois Haskell ne peut pas déterminer le type attendu. La démonstration classique de cela est le
+  fameux problème du ``@show . read@'':
 
 < canParseInt x = show (read x)
 
-  Haskell cannot compile that function because it does not know the type of @read x@.
-  We must limit the type through an annotation:
+  Haskell ne peut pas compiler cette fonction car il ne connaît pas le type de @read x@.
+  On doit affiner le type avec une annotation:
 
 > canParseInt x = show (read x :: Int)
 
-  Annotations have the same syntax as type signatures, but may adorn
-  any expression. Note that the annotation above is on the expression
-  @read x@, not on the variable @x@. Only function application (e.g.,
-  @read x@) binds tighter than annotations. If that was not the case,
+  Les Annotations ont la même syntaxe que les signatures de type, mais peuvent enrichir
+  n'importe quelle expression. Remarquez que l'annotation ci-dessus est attachée à
+  @read x@, et non pas sur la variable @x@. Seule l'application de la fonction (par exemple,
+  @read x@) est plus forte que les annotations @TODO: Vérifier sémantique. If that was not the case,
   the above would need to be written @(read x) :: Int@.
 
 \shd{Unit}\label{unit}
 
-  @()@ -- ``unit'' type and ``unit'' value. The value and type that represents
-  no useful information.
+  @()@ -- Le type ``unit'' et la valeur ``unit''. La valeur et le type ne représentant aucune information utile.
 
-\hd{Keywords}\label{keywords}
+\hd{Mots réservés}\label{keywords}
 
-  Haskell keywords are listed below, in alphabetical order.
+  Les mots réservés Haskell sont listés ci-dessous, par ordre alphabétique.
 
 \shd{Case}\label{case}
 
-  @case@ is similar to a @switch@ statement in C\# or Java, but can match a
-  pattern: the shape of the value being inspected.  Consider a simple data type:
+  @case@ est similaire à l'instruction @switch@ en C\# ou Java, mais peut détecter un motif: La forme de la valeur
+  inspectée.  Considérez un type de donnée:
 
 > data Choices = First String | Second |
 >   Third | Fourth
@@ -796,7 +789,7 @@ le code source dans votre interpréteur pour tester les exemples inclus.
 
 \end{comment}
 
-  \noindent @case@ can be used to determine which choice was given:
+  \noindent @case@ peut être utilisé pour déterminer le choix donné @TODO: Vérifier:
 
 > whichChoice ch =
 >   case ch of
@@ -804,55 +797,55 @@ le code source dans votre interpréteur pour tester les exemples inclus.
 >     Second -> "2nd!"
 >     _ -> "Something else."
 
-  As with pattern-matching in function definitions, the `@_@' token is a
-  ``wildcard'' matching any value.
+  Comme avec les motifs de correspondance dans les définitions de fonction, le symbole ``méta-caractère'' `@_@' accepte
+  n'importe quelle valeur.
 
-  \sshd{Nesting \& Capture}\label{nesting-capture}
+  \sshd{Imbrication \& Capture}\label{nesting-capture}
 
-  Nested matching and binding are also allowed. For example, here is the definition
-of the @Maybe@ type:
+  Les motifs et affectations imbriquées sont également autorisées. Par exemple, voici la définition du
+  type @Maybe@ :
 
 < data Maybe a = Just a | Nothing
 \label{maybe}
 
-  Using @Maybe@ we can determine if any choice was given using a nested match:
+  En utilisant @Maybe@ on peut déterminer si un choix a été donné à partir d'une "correspondance" imbriquée:
 
 > anyChoice1 ch =
 >   case ch of
->     Nothing -> "No choice!"
->     Just (First _) -> "First!"
+>     Nothing -> "Pas de choix!"
+>     Just (First _) -> "Premier!"
 >     Just Second -> "Second!"
->     _ -> "Something else."
+>     _ -> "Quelquechose d'autre."
 
-  Binding can be used to manipulate the value matched:
+  Les affectations peuvent être utilisées pour manipuler la valeur extraite:
 
 > anyChoice2 ch =
 >   case ch of
->     Nothing -> "No choice!"
+>     Nothing -> "Pas de choix!"
 >     Just score@(First "gold") ->
->       "First with gold!"
+>       "Premier avec l'or!"
 >     Just score@(First _) ->
->       "First with something else: "
+>       "Premier avec autre chose: "
 >         ++ show score
->     _ -> "Not first."
+>     _ -> "Non premier."
 
-  \sshd{Matching Order}\label{case-matching-order}
+  \sshd{Ordre des correspondances}\label{case-matching-order}
 
-  Matching proceeds from top to bottom. If @anyChoice1@ is reordered as follows,
-  the first pattern will always succeed:
+  L'évaluation des correspondances se fait de haut en bas. If @anyChoice1@ est réordonné comme suite, alors le
+  premier motif sera toujours détecté:
 
 > anyChoice3 ch =
 >   case ch of
->     _ -> "Something else."
->     Nothing -> "No choice!"
->     Just (First _) -> "First!"
+>     _ -> "Quelquechose d'autre."
+>     Nothing -> "Pas de choix!"
+>     Just (First _) -> "Premier!"
 >     Just Second -> "Second!"
 
-  \sshd{Guards}\label{case-guards}
+  \sshd{Conditions d'entrées}\label{case-guards}
 
-  Guards, or conditional matches, can be used in cases just like function
-  definitions. The only difference is the use of the @->@ instead of @=@. Here
-  is a simple function which does a case-insensitive string match:
+  Les gardes, ou conditions d'entrée, peuvent être utilisées de la même fonction que des
+  définitions de fonctions. La seule différence tient dans l'utilisation de @->@ au lieu de @=@. Voici
+  une fonction simple qui effectue une comparaison non sensible à la casse:
 
 > strcmp s1 s2 = case (s1, s2) of
 >   ([], []) -> True
@@ -862,71 +855,72 @@ of the @Maybe@ type:
 >     | otherwise -> False
 >   _ -> False
 
-\shd{Class}\label{class}
+\shd{Classe}\label{class}
 
-  A Haskell function is defined to work on a certain type or set of types and
-  cannot be defined more than once. Most languages support the idea of
-  ``overloading'', where a function can have different behavior depending on the
-  type of its arguments. Haskell accomplishes overloading through @class@ and
-  @instance@ declarations. A @class@ defines one or more functions that can be
-  applied to any types which are members (i.e., instances) of that class. A
-  class is analogous to an interface in Java or C\#, and instances to a concrete
-  implementation of the interface.
+  Une fonction Haskell est définie pour un type particulier ou un ensemble de types et ne
+  peut être définie plus d'une fois. La plupart des langages supportent le mécanisme de
+  ``surcharge'', où une fonction peut avoir différents comportements en lien avec le type
+  de ses arguments. Haskell implémente la surcharge au travers de déclarations @classe@ et
+  @instance@. Une @classe@ définit une ou plusieurs fonctions qui peuvent être appliquées
+  à n'importe lequel des membres (ou instances)de cette classe. Une classe est comparable
+  à une interface en Java ou C\#, et les instances à des implémentations concrètes de cette
+  interface.
 
-  A class must be declared with one or more type variables. Technically, Haskell
-  98 only allows one type variable, but most implementations of Haskell support
-  so-called \emph{multi-parameter type classes}, which allow more than one type
-  variable.
+  Une classe doit être déclarée avec ou plusieurs variables de type. Techniquement, Haskell
+  98 autorise seulement une variable de type, mais la plupart des implémentations d'Haskell
+  supportent les \emph{classes de type multi-paramètres}, qui autorisent de fait plus d'une
+  variable de type.
 
-  We can define a class which supplies a flavor for a given type:
+  On peut définir une classe qui fournit une variante pour un type donné:
 
 > class Flavor a where
 >   flavor :: a -> String
 
-  Notice that the declaration only gives the type signature of the function---no
-  implementation is given here (with some exceptions, see
-  \hyperref[defaults]{``Defaults''} on page~\pageref{defaults}). Continuing, we
-  can define several instances:
+  Notez que la déclaration donne seulement la signature de type de la fonction---aucune
+  implémentation n'est effectuée ici (avec néanmoins quelques exceptions, cf.
+  \hyperref[defaults]{``Defaults''} en page~\pageref{defaults}). Pour poursuivre, on peut
+  définir plusieurs instances:
 
 > instance Flavor Bool where
->   flavor _ = "sweet"
+>   flavor _ = "doux"
 >
 > instance Flavor Char where
->   flavor _ = "sour"
+>   flavor _ = "amer"
 
-  Evaluating @flavor True@ gives:
+  L'évaluation de @flavor True@ donne:
 
 < > flavor True
-< "sweet"
+< "doux"
 
   While @flavor 'x'@ gives:
 
 < > flavor 'x'
-< "sour"
+< "amer"
 
-\sshd{Defaults}\label{defaults}
+\sshd{Valeurs par défauts}\label{defaults}
 
-  Default implementations can be given for functions in a class. These are
-  useful when certain functions can be defined in terms of others in the class.
-  A default is defined by giving a body to one of the member functions. The
-  canonical example is @Eq@, which defines @/=@ (not equal) in terms of @==@\ :
+  Des implémentations par défaut peuvent être données pour les fonctions d'une classe. Elles sont
+  utiles quand certaines fonctions peuvent être définies à partir d'autres fonctions de la classe.
+
+  Une valeur par défaut est définie en donnant un corps à une des fonctions membres. L'exemple
+  canonique est @Eq@, qui définit @/=@ (non égal) en termes de of @==@\ :
 
 < class Eq a where
 <   (==) :: a -> a -> Bool
 <   (/=) :: a -> a -> Bool
 <   (/=) a b = not (a == b)
 
-  Recursive definitions can be created. Continuing the @Eq@ example,
-  @==@ can be defined in terms of @/=@:
+  Des définitions récursives peuvent être créées. Pour poursuivre l'exemple de @Eq@,
+  @==@ peut être défini en termes de @/=@:
 
 <   (==) a b = not (a /= b)
 
-  However, if instances do not provide enough concrete implementations
-  of member functions then any program using those instances will loop.
+  Cependant, si les instances ne fournissent pas suffisamment d'implémentations concrètes des
+  fonctions membres, alors un programme utilisant de telles instances bouclera.
 
-\shd{Data}\label{data}
+\shd{Donnée}\label{data}
 
-  So-called \emph{algebraic data types} can be declared as follows:
+  Les fameux \emph{type de données algébriques} peuvent être déclarés comme suit:
 
 > data MyType = MyValue1 | MyValue2
 
@@ -936,165 +930,158 @@ of the @Maybe@ type:
 
 \end{comment}
 
-  @MyType@ is the type's \emph{name}. @MyValue1@ and @MyValue2@ are \emph{values}
-  of the type and are called \emph{constructors}. Multiple constructors are
-  separated with the `@|@' character. Note that type and constructor names
-  \emph{must} start with a capital letter. It is a syntax error otherwise.
+  @MyType@ est le \emph{nom} du type. @MyValue1@ et @MyValue2@ sont des \emph{valeurs}
+  du type et sont appelées \emph{constructeurs}. Plusieurs constructeurs peuvent être
+  fournis en les séparant avec le caractère `@|@'. Remarquez que les noms du type
+  et du constructeur \emph{doivent} débuter avec une lettre majuscule. Sinon,
+  il s'agit d'une erreur de syntaxe.
 
-  \sshd{Constructors with Arguments}\label{constructors-with-arguments}
+  \sshd{Constructeurs avec des Arguments}\label{constructors-with-arguments}
 
-  The type above is not very interesting except as an enumeration. Constructors
-  that take arguments can be declared, allowing more information to be stored:
+  Le type ci-dessus n'est pas très intéressant sauf en tant qu'énumération. Les Constructeurs
+  prenant des arguments peuvent être déclarés, autorisant le stockage de plus d'informations:
 
 > data Point = TwoD Int Int
 >   | ThreeD Int Int Int
 
-  Notice that the arguments for each constructor are \emph{type} names, not
-  constructors. That means this kind of declaration is illegal:
+  Remarquez que les arguments pour chacun des constructeurs sont des noms de \emph{type}, pas des
+  constructeurs. Cela veut dire que ce type de déclaration est illégal:
 
 < data Poly = Triangle TwoD TwoD TwoD
 
-  instead, the @Point@ type must be used:
+  à la place, le type @Point@ doit être utilisé:
 
 > data Poly = Triangle Point Point Point
 
-  \sshd{Type and Constructor Names}\label{type-punning}
+  \sshd{Type and noms de Constructeurs}\label{type-punning}
 
-  Type and constructor names can be the same, because they will never be used in
-  a place that would cause confusion. For example:
+  Le Type et les noms de constructeurs peuvent être les mêmes, car ils ne peuvent en aucun cas
+  être utilisés d'une manière ambigüe. Par exemple:
 
 > data User = User String | Admin String
 
-  which declares a type named @User@ with two constructors, @User@ and @Admin@.
-  Using this type in a function makes the difference clear:
+  qui déclare un type nommé @User@ avec deux constructeurs, @User@ et @Admin@.
+  Utiliser ce type dans une fonction met en évidence la différence:
 
-> whatUser (User _) = "normal user."
-> whatUser (Admin _) = "admin user."
+> whatUser (User _) = "utilisateur normal."
+> whatUser (Admin _) = "administrateur."
 
-  Some literature refers to this practice as \emph{type punning}.
+  La littérature se réfère à cette pratique comme étant le \emph{transtypage de type}.
 
-  \sshd{Type Variables}\label{type-variables}
+  \sshd{Variables de type}\label{type-variables}
 
-  Declaring so-called \emph{polymorphic} data types is as easy as adding type
-  variables in the declaration:
+  Déclarer des types de données \emph{polymorphiques} est aussi simple que d'ajouter des
+  variables de type dans la déclaration:
 
 > data Slot1 a = Slot1 a | Empty1
 
-  This declares a type @Slot1@ with two constructors, @Slot1@ and @Empty1@. The
-  @Slot1@ constructor can take an argument of \emph{any} type, which is
-  represented by the type variable @a@ above.
+  Ceci déclare un type @Slot1@ avec deux constructeurs, @Slot1@ et @Empty1@. Le constructeur
+  de @Slot1@ peut prendre un argument de type \emph{quelconque}, ce qui se représente par la
+  variable de type @a@ ci-dessus.
 
-  We can also mix type variables and specific types in constructors:
+  On peut également mélanger des variables de type et des types spécifiques dans les constructeurs:
 
 > data Slot2 a = Slot2 a Int | Empty2
 
-  Above, the @Slot2@ constructor can take a value of any type and an @Int@
-  value.
+  Ci-dessus, le constructeur de @Slot2@ prend une valeur d'un type quelconque et une valeur de type @Int@.
 
-  \sshd{Record Syntax}\label{record-syntax}
+  \sshd{Syntaxe des enregistrements}\label{record-syntax}
 
-  Constructor arguments can be declared either positionally, as above, or using
-  record syntax, which gives a name to each argument. For example, here we
-  declare a @Contact@ type with names for appropriate arguments:
+  Les arguments des Constructeurs peuvent être déclarés soit par position comme ci-dessus, ou
+  en utilisant la syntaxe des enregistrements, qui permet de donner un nom à chacun des arguments. Par exemple,
+  ici on déclare un type @Contact@ type avec les arguments appropriés:
 
 > data Contact = Contact { ctName :: String
 >       , ctEmail :: String
 >       , ctPhone :: String }
 
-  These names are referred to as \emph{selector} or \emph{accessor} functions
-  and are just that, functions. They must start with a lowercase letter or
-  underscore and cannot have the same name as another function in scope. Thus
-  the ``@ct@'' prefix on each above. Multiple constructors (of the same type)
-  can use the same accessor function for values of the same type, but that can
-  be dangerous if the accessor is not used by all constructors. Consider this
-  rather contrived example:
+  Ces noms sont nommés \emph{sélecteur} ou fonctions \emph{accesseur}
+  et ne sont que cela, des fonctions. Elles doivent débuter par une lettre minuscule ou un
+  caractère souligné et ne peuvent pas avoir le même nom qu'une fonction dans la portée en cours.
+  D'ou le préfixe ``@ct@'' ci-dessus. Plusieurs constructeurs (du même type) peuvent utiliser
+  la même fonction "accesseur" pour des valeurs de même type, mais cela peut être dangereux si
+  l'accesseur n'est pas utilisé par tous les constructeurs. Considérez cet exemple plutôt
+  réduit:
 
 > data Con = Con { conValue :: String }
 >   | Uncon { conValue :: String }
 >   | Noncon
 >
-> whichCon con = "convalue is " ++
+> whichCon con = "La valeur est " ++
 >   conValue con
 
-  If @whichCon@ is called with a @Noncon@ value, a runtime error will occur.
+  Si @whichCon@ est appelé avec une valeur @Noncon@, une erreur d'exécution se produira.
 
-  Finally, as explained elsewhere, these names can be used for pattern matching,
-  argument capture and ``updating.''
+  Finalement, comme expliqué ailleurs, ces noms peuvent être mis en oeuvre dans des motifs de
+  correspondance, argument capturé et ``modification.''
 
   \sshd{Deriving}\label{deriving}
 
-  Many types have common operations which are tedious to define yet necessary,
-  such as the ability to convert to and from strings, compare for equality, or
-  order in a sequence. These capabilities are defined as typeclasses in Haskell.
+  De nombreux types ont des opérations en commun, pénibles à définir mais néanmoins nécessaires,
+  telles que la capacité à convertir à partir et vers des chaînes de caractères, vérifier l'égalité, ou
+  l'ordre dans une séquence. Ces capacités sont définies en tant que @classe de type@ en Haskell.
 
-  Because seven of these operations are so common, Haskell provides the
-  @deriving@ keyword which will automatically implement the typeclass on the
-  associated type. The seven supported typeclasses are: @Eq@, @Read@, @Show@,
-  @Ord@, @Enum@, @Ix@, and @Bounded@.
+  Parce que sept de ces opérations sont tellement communes, Haskell fournit le mot réservé
+  @deriving@ qui implémente automatiquement la @classe de type@ pour le type associé. Les sept @classe de type@
+  supportés sont : @Eq@, @Read@, @Show@,
+  @Ord@, @Enum@, @Ix@, et @Bounded@.
 
-  Two forms of @deriving@ are possible. The first is used when a type only
-  derives one class:
+  Il existe deux variantes de @deriving@: La première est utilisée quand un type dérive seulement une classe:
 
 > data Priority = Low | Medium | High
 >   deriving Show
 
-  The second is used when multiple classes are derived:
+  La seconde est utilisée lorsque plusieurs classes sont dérivées:
 
 > data Alarm = Soft | Loud | Deafening
 >   deriving (Read, Show)
 
-  It is a syntax error to specify @deriving@ for any other classes besides the
-  seven given above.
+  Spécifier @deriving@ pour toute autre classe en dehors des sept ci-dessus constitue une erreur de syntaxe.
 
-  \sshd{Class Constraints}\label{class-constraints}
+  \sshd{Contraintes de Classe}\label{class-constraints}
 
-  Data types can be declared with class constraints on the type variables, but
-  this practice is discouraged. It is better to hide the
-  ``raw'' data constructors using the module system and instead export ``smart''
-  constructors which apply appropriate constraints. In any case, the syntax used
-  is:
+  Les types de données peuvent être déclarés avec des contraintes de classe sur les variables de type, mais
+  cette pratique est découragée. Il est préférable de masquer les constructeurs de données ``bruts'' en
+  utilisant le module system et à la place exporter des constructeurs ``intelligents'' qui appliquent les
+  contraintes appropriées. Dans tous les cas, la syntaxe utilisée est:
 
 > data (Num a) => SomeNumber a = Two a a
 >   | Three a a a
 
-  This declares a type @SomeNumber@ which has one type variable argument. Valid
-  types are those in the @Num@ class.
+  Ceci déclare un type @SomeNumber@ qui a un argument 'variable de type'. Les types valides sont ceux de la classe de type @Num@.
 
 \shd{Deriving}
 
-  See the section on \hyperref[deriving]{@deriving@} under the @data@ keyword on
-  page~\pageref{deriving}.
+  Cf. la partie sur \hyperref[deriving]{@deriving@} sous le mot réservé @data@ keyword, page~\pageref{deriving}.
 
 \shd{Do}\label{do}
 
-  The @do@ keyword indicates that the code to follow will be in a \emph{monadic}
-  context. Statements are separated by newlines, assignment is indicated by
-  @<-@, and a @let@ form is introduced which does not require the @in@ keyword.
+  Le mot réservé @do@ indique que le code qui suit sera en contexte \emph{monadique}. Les instructions sont
+  séparées par des sauts de lignes, l'affectation est marquée par @<-@, et une variante de @let@ sans le @in@
+  est permise.
 
-  \sshd{If and IO}\label{if-io}
+  \sshd{If et IO}\label{if-io}
 
-  @if@ can be tricky when used with IO. Conceptually it is no different from an
-  @if@ in any other context, but intuitively it is hard to develop. Consider the
-  function @doesFileExist@ from @System.Directory@:
+  @if@ peut être subtil lorsque utilisé conjointement avec IO. Conceptuellement, ce n'est pas différent d'un
+  @if@ dans n'importe quel autre contexte, mais intuitivement, c'est dur à construire. Considérez la fonction
+  @doesFileExist@ de @System.Directory@:
 
 < doesFileExist :: FilePath -> IO Bool
 
-  The @if@ statement has this ``signature'':
+  L'instruction @if@ a cette ``signature'':
 
 < if-then-else :: Bool -> a -> a -> a
 
-  That is, it takes a @Bool@ value and evaluates to some other value based on
-  the condition. From the type signatures it is clear that @doesFileExist@
-  cannot be used directly by @if@:
+  Donc, elle prend une valeur @booléenne@ et s'évalue à une autre valeur sur la base d'une condition. Vu la signature
+  du type, il est évident que @doesFileExist@ ne peut pas être utilisé directement par @if@:
 
 < wrong fileName =
 <   if doesFileExist fileName
 <     then ...
 <     else ...
 
-  That is, @doesFileExist@ results in an @IO Bool@ value, while @if@ wants a
-  @Bool@ value. Instead, the correct value must be ``extracted'' by running the
-  IO action:
+  Donc, @doesFileExist@ retourne une valeur @IO Bool@, alors que le @if@ requiert une valeur
+  @booléenne@. A la place, la valeur correct doit être ``extraite'' en exécutant l'action IO:
 
 > right1 fileName = do
 >   exists <- doesFileExist fileName
