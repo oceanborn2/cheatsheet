@@ -1,3 +1,4 @@
+ignore
 dist
 *.manifest
 *.hi
@@ -17,3 +18,4 @@ CheatSheet.tex
 *.dvi
 *.ps
 *.pdf
+

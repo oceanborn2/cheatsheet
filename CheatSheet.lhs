@@ -42,10 +42,10 @@
 \begin{multicols}{3}
 \section*{\textsf{\LARGE Haskell Cheat Sheet\normalsize}}\label{preamble}
 
-This cheat sheet lays out the fundamental elements of the Haskell language:
-syntax, keywords and other elements. It is presented as both an executable
-Haskell file and a printable document. Load the source into your favorite
-interpreter to play with code samples shown.
+Cette "antisèche" couvre les éléments fondamentaux du langage Haskell:
+syntaxe, mots réservés et autres éléments. Elle est présentée à la fois
+comme un fichier Haskell exécutable et un document imprimable. Chargez
+le code source dans votre interpréteur pour tester les exemples inclus.
 
 \begin{comment}
 
@@ -61,23 +61,22 @@ interpreter to play with code samples shown.
 
 \end{comment}
 
-\hd{Basic Syntax}\label{syntax}
+\hd{Syntaxe de base}\label{syntax}
 
-\shd{Comments}\label{comments}
+\shd{Commentaires}\label{comments}
 
-  A single line comment starts with `@--@' and extends to the end of the line.
-  Multi-line comments start with '@{-@' and extend to '@-}@'. Comments can be
-  nested.
+  Un commentaire de ligne commence par `@--@' et s'étends jusqu'à la fin de la ligne.
+  Les commentaires Multi-lignes commencent par '@{-@' et s'étendent jusqu'au '@-}@'. Les
+  commentaires peuvent être imbriqués.
 
-  Comments above function definitions should start with `@{- |@' and those next
-  to parameter types with `@-- ^@' for compatibility with
-  Haddock, a system for documenting
-  Haskell code.
+  Les commentaires situés juste au dessus des définitions des fonctions doivent commencer par `@{- |@'
+  et les types de paramètres par `@-- ^@' pour des raisons de compatibilité avec Haddock, un système
+  de documentation du code Haskell.
 
-\shd{Reserved Words}\label{reserved-words}
+\shd{Mots réservés}\label{reserved-words}
 
-  The following words are reserved in Haskell. It is a syntax error to give a
-  variable or a function one of these names.
+  Les mots suivants sont réservés en Haskell. Nommer une variable ou une fonction avec
+  l'un de ces noms constitue une erreur de syntaxe.
 
   \setlength{\columnsep}{10.0pt}
   \setlength{\columnseprule}{0.0pt}
@@ -108,125 +107,126 @@ interpreter to play with code samples shown.
   \setlength{\columnsep}{18.0pt}
   \setlength{\columnseprule}{0.4pt}
 
-\shd{Strings}\label{strings}
+\shd{Chaînes de caractères}\label{strings}
 
   \begin{compactitem}
-  \item @"abc"@ -- Unicode string, sugar for @['a','b','c']@.
-  \item @'a'@ -- Single character.
+  \item @"abc"@ -- Chaîne Unicode, équivalent à @['a','b','c']@.
+  \item @'a'@ -- Un caractère.
   \end{compactitem}
 
-  \sshd{Multi-line Strings}\label{multi-line-strings}
+  \sshd{Chaînes de caractères Multi-lignes}\label{multi-line-strings}
 
-  Normally, it is a syntax error if a string has any newline characters.
-  That is, this is a syntax error:
+  Normalement, une chaîne de caractères ne doit pas contenir de saut de ligne. Cela
+  constitue une erreur de syntaxe.
 
-< string1 = "My long
-< string."
+  Donc, ceci est une erreur de syntaxe:
 
-  Backslashes (`@\@') can ``escape'' a newline:
+< string1 = "My chaîne
+< longue."
 
-> string1 = "My long \
-> \string."
+  Un caractère "barre inverse" (`@\@') permet d'``échapper'' un saut de ligne:
 
-  The area between the backslashes is ignored. Newlines \emph{in} the
-  string must be represented explicitly:
+> string1 = "Ma chaîne \
+> \longue."
 
-> string2 = "My long \n\
-> \string."
+  La zone entre les caractères "barre inverse" est ignorée. Les sauts de lignes \emph{dans} la chaîne
+  doivent être représentés explicitement:
 
-  That is, @string1@ evaluates to:
+> string2 = "Ma chaîne \n\
+> \longue."
 
-< My long string.
+  Donc, @string1@ vaut:
 
-  While @string2@ evaluates to:
+< Ma chaîne longue.
 
-< My long
-< string.
+  Alors que @string2@ vaut:
 
-  \sshd{Escape Codes} The following escape codes can be used in characters or strings:
+< Ma chaîne
+< longue.
+
+  \sshd{Codes d'échappement} Les caractères d'échappement suivants peuvent être utilisés pour les caractères ou les chaînes de caractères:
   \begin{compactitem}
-    \item @\n@, @\r@, @\f@, etc. -- The standard codes for newline,
-      carriage return, form feed, etc. are supported.
-    \item @\72@, @\x48@, @\o110@ -- A character with the value 72 in
-      decimal, hex and octal, respectively.
-    \item @\&@ -- A ``null'' escape character which allows numeric
-      escape codes next to numeric literals. For example, @\x2C4@ is
-      $\wedge$ (in Unicode) while @\x2C\&4@ is @,4@. This sequence
-      cannot be used in character literals.
+    \item @\n@, @\r@, @\f@, etc. -- Les codes standards pour saut de ligne, retour chariot, saut de page, etc. sont supportés.
+    \item @\72@, @\x48@, @\o110@ -- Un caractère de valeur 72 en
+      décimal, hexa et octal, respectivement.
+    \item @\&@ -- Un caractère d'échappement ``nul'' qui autorise la présence de codes d'échappement au côté de caractères numériques litéraux. Par exemple, @\x2C4@ est un
+      $\wedge$ (en Unicode) alors que @\x2C\&4@ représente @,4@. Cette séquence ne peut pas être utilisé en tant que
+      caractères litéraux.
   \end{compactitem}
 
 
-\shd{Numbers}\label{numbers}
+\shd{Nombres}\label{numbers}
 
   \begin{compactitem}
-  \item @1@ -- Integer or floating point value.
-  \item @1.0, 1e10@ -- Floating point value.
-  \item @0o1, 0O1@ -- Octal value.
-  \item @0x1, 0X1@ -- Hexadecimal value.
- \item  @-1@ -- Negative number; the minus sign (``@-@'') cannot be separated from the number.
+  \item @1@ -- Valeur flottante ou entière.
+  \item @1.0, 1e10@ -- Valeur flottante.
+  \item @0o1, 0O1@ -- Valeur Octale.
+  \item @0x1, 0X1@ -- Valeur Hexadécimale.
+ \item  @-1@ -- Nombre négatif; le signe moins (``@-@'') ne peut pas être séparé du nombre.
   \end{compactitem}
 
-\shd{Enumerations}\label{enumerations}
+\shd{Enumérations}\label{enumerations}
 
   \begin{compactitem}
-  \item @[1..10]@ -- List of numbers -- \texttt{1, 2, {\ensuremath\mathellipsis}, 10}.
-  \item @[100..]@ -- Infinite list of numbers -- \texttt{100, 101, 102, {\ensuremath\mathellipsis}\ }.
-  \item @[110..100]@ -- Empty list, but @[110, 109 .. 100]@ will give a list from 110 to 100.
-  \item @[0, -1 ..]@ -- Negative integers.
-  \item @[-110..-100]@ -- Syntax error; need @[-110.. -100]@ for negatives.
-  \item @[1,3..99], [-1,3..99]@ -- List from 1 to 99 by 2, -1 to 99 by 4.
+  \item @[1..10]@ -- Liste de nombre -- \texttt{1, 2, {\ensuremath\mathellipsis}, 10}.
+  \item @[100..]@ -- Liste de nombre infinie -- \texttt{100, 101, 102, {\ensuremath\mathellipsis}\ }.
+  \item @[110..100]@ -- Liste vide, mais @[110, 109 .. 100]@ donnera une liste de 110 à 100.
+  \item @[0, -1 ..]@ -- Nombres négatifs.
+  \item @[-110..-100]@ -- Erreur de syntaxe; il faut remplacer par @[-110.. -100]@ pour les négatifs (espace supplémentaire).
+  \item @[1,3..99], [-1,3..99]@ -- Liste de 1 à 99, par incréments de 2, de -1 à 99 par incréments de 4.
   \end{compactitem}
 
-  \noindent In fact, any value which is in the @Enum@ class can be used:
+  \noindent De fait, n'importe quelle valeur appartenant à la classe @Enum@ peut être utilisée:
 
   \begin{compactitem}
-  \item @['a' .. 'z']@ -- List of characters -- \texttt{a, b, {\ensuremath\mathellipsis}, z}.
+  \item @['a' .. 'z']@ -- Liste de caractères -- \texttt{a, b, {\ensuremath\mathellipsis}, z}.
   \item @['z', 'y' .. 'a']@ -- \texttt{z, y, x, {\ensuremath\mathellipsis}, a}.
   \item @[1.0, 1.5 .. 2]@ -- @[1.0,1.5,2.0]@.
-  \item @[UppercaseLetter ..]@ -- List of @GeneralCategory@ values (from @Data.Char@).
+  \item @[UppercaseLetter ..]@ -- Liste de valeurs @GeneralCategory@ (de @Data.Char@).
   \end{compactitem}
 
-\shd{Lists \& Tuples}\label{lists-tuples}
+\shd{Listes \& Tuplets}\label{lists-tuples}
 
   \begin{compactitem}
-  \item @[]@ -- Empty list.
-  \item @[1,2,3]@ -- List of three numbers.
-  \item @1 : 2 : 3 : []@ -- Alternate way to write lists using ``cons'' (@:@) and ``nil'' (@[]@).
-  \item @"abc"@ -- List of three characters (strings are lists).
-  \item @'a' : 'b' : 'c' : []@ -- List of characters (same as @"abc"@).
-  \item @(1,"a")@ -- 2-element tuple of a number and a string.
-  \item @(head, tail, 3, 'a')@ -- 4-element tuple of two functions, a number and a character.
+  \item @[]@ -- Liste vide.
+  \item @[1,2,3]@ -- Liste de trois nombres.
+  \item @1 : 2 : 3 : []@ -- Alternative pour construire une liste, en utilisant ``cons'' (@:@) et ``nil'' (@[]@).
+  \item @"abc"@ -- Liste de trois caractères (les chaînes de caractères sont des listes).
+  \item @'a' : 'b' : 'c' : []@ -- Liste de caractères (équivalent à @"abc"@).
+  \item @(1,"a")@ -- tuplet de 2-éléments (nombre et chaîne de caractères).
+  \item @(head, tail, 3, 'a')@ -- tuplet de 4-éléments constitué de deux fonctions, d'un nombre et d'un caractère.
   \end{compactitem}
 
-\shd{``Layout'' rule, braces and semi-colons.}\label{layout}
+\shd{règle de ``Mise en forme'', accolades, point-virgules.}\label{layout}
 
- Haskell can be written using braces and semi-colons, just like C. However, no
- one does. Instead, the ``layout'' rule is used, where spaces represent scope.
- The general rule is: always indent. When the compiler complains, indent more.
+ Haskell supporte les accolades et les point-virgules, comme en C. Cependant
+ personne ne les utilise. A la place, on utilise des règles de ``mise en forme'',
+ avec lesquelles l'indentation représente la portée.
+ La règle générale est la suivante: toujours indenter. Quand le compilateur se plaint, indenter plus.
 
-  \sshd{Braces and semi-colons}\label{braces-semicolons}
+  \sshd{Accolates et point-virgules}\label{braces-semicolons}
 
-  Semi-colons terminate an expression, and braces represent scope. They can be
-  used after several keywords: @where@, @let@, @do@ and @of@. They cannot be
-  used when defining a function body. For example, the below will not compile.
+  Les point-virgules terminent une expression, tandis que les accolates représentent la portée. Ils sont
+  utilisables avec les mots réservés suivants: @where@, @let@, @do@ and @of@. Ils ne le sont pas lors de
+  la définition du corps d'une fonction. Par exemple, le code suivant ne compilera pas:
 
 <    square2 x = { x * x; }
 
-  However, this will work fine:
+  Cependant, celui-ci fonctionnera sans soucis:
 
 > square2 x = result
 >     where { result = x * x; }
 
-  \sshd{Function Definition}\label{layout-function-definition}
+  \sshd{Définition de fonction}\label{layout-function-definition}
 
-  Indent the body at least one space from the function name:
+  Indenter le corps d'au moins un espace à partir du nom de la fonction:
 
 < square x  =
 <   x * x
 
-  Unless a @where@ clause is present. In that case, indent the where clause at
-  least one space from the function name and any function bodies at least one
-  space from the @where@ keyword:
+  Sauf si une clause @where@ est présente. Dans ce cas, indenter la clause where d'au moins un espace
+  à partir du nom de la fonction. Indenter tout corps de fonction d'au moins un espace à partir du mot
+  réservé @where@:
 
 <  square x =
 <      x2
@@ -235,126 +235,119 @@ interpreter to play with code samples shown.
 
   \sshd{Let}\label{layout-let}
 
-  Indent the body of the let at least one space from the first definition in the
-  @let@. If @let@ appears on its own line, the body of any definition must
-  appear in the column after the let:
+  Indenter le corps d'au moins un espace depuis la première définition du @let@. Si @let@ apparaît sur sa propre ligne, alors le corps doit apparaître dans la colonne après le @let@:
 
 <  square x =
 <    let x2 =
 <          x * x
 <    in x2
 
-  As can be seen above, the @in@ keyword must also be in the same column as
-  @let@. Finally, when multiple definitions are given, all identifiers must
-  appear in the same column.
+  Comme on peut le voir ci-dessus, le mot réservé @in@ doit aussi être dans la même colonne que le @let@. Enfin, quand
+  plusieurs définitions sont données, tout les identifiants doivent apparaître dans la même colonne.
 
-\hd{Declarations, Etc.}\label{declarations}
+\hd{Déclarations, Etc.}\label{declarations}
 
-  The following section details rules on function declarations, list
-  comprehensions, and other areas of the language.
+  La partie suivante détaille les règles de déclaration des fonctions, les listes "en place" TODO:comprehensions, et d'autres
+  parties du langage.
 
-\shd{Function Definition}\label{function-definition}
+\shd{Définition de fonction}\label{function-definition}
 
-  Functions are defined by declaring their name, any arguments, and an equals
-  sign:
+  Les fonctions sont définies en déclarant son nom, ses arguments et un signe "égal":
 
 > square x = x * x
 
-  \emph{All} functions names must start with a lowercase letter or ``@_@''. It
-  is a syntax error otherwise.
+  \emph{Tout} les noms de fonctions doivent débuter par une lettre minuscule ou le caractère ``@_@''. Autrement, il s'agit d'une erreur de syntaxe.
 
-  \sshd{Pattern Matching}\label{pattern-matching}
+  \sshd{Motifs de correspondance}\label{pattern-matching}
 
-  Multiple ``clauses'' of a function can be defined by ``pattern-matching'' on
-  the values of arguments. Here, the @agree@ function has four separate
-  cases:
+  Plusieurs ``clauses'' d'une fonction peuvent être définies avec le mécanismede ``motifs de correspondance'' utilisé sur
+  les valeurs des arguments. Ici, la fonction @agree@ a 4 cas distincts:
 
-> -- Matches when the string "y" is given.
-> agree1 "y" = "Great!"
-> -- Matches when the string "n" is given.
-> agree1 "n" = "Too bad."
-> -- Matches when string beginning
-> -- with 'y' given.
+> -- Détecte quand la chaîne "y" est trouvée.
+> agree1 "y" = "Super!"
+> -- Détecte quand la chaîne "n" est trouvée.
+> agree1 "n" = "Pas de chance."
+> -- Détecte la correspondance du début d'une chaîne
+> -- avec 'y'.
 > agree1 ('y':_) = "YAHOO!"
-> -- Matches for any other value given.
-> agree1 _ = "SO SAD."
+> -- Accepte toute autre valeur.
+> agree1 _ = "Tellement triste."
 
-  Note that the `@_@' character is a wildcard and matches any value.
+  Notez que le caractère`@_@' est un méta-caractère et intercepte n'importe quelle valeur.
 
-  Pattern matching can extend to nested values. Assuming this data declaration:
+  Les motifs de correspondance peuvent être utilisés de manière imbriquée. Prenons cette déclaration:
 
 < data Bar = Bil (Maybe Int) | Baz
 
-  \noindent and recalling the \hyperref[maybe]{definition of @Maybe@} from
-  page~\pageref{maybe} we can match on nested @Maybe@ values when @Bil@ is
-  present:
+  \noindent en gardant à l'esprit la \hyperref[maybe]{définition de @Maybe@}
+  page~\pageref{maybe}, on peut trouver des correspondances de valeurs sur @Maybe@ imbriquées quand @Bil@ est
+  présent:TODO:Vérifier sens et sémantique
 
 < f (Bil (Just _)) = ...
 < f (Bil Nothing) = ...
 < f Baz = ...
 
-  Pattern-matching also allows values to be assigned to variables. For example,
-  this function determines if the string given is empty or not. If not, the
-  value bound to @str@ is converted to lower case:
+  Les motifs de correspondance permettent également d'affecter des valeurs à des variables. Par exemple,
+  cette fonction détermine si la chaîne donnée est vide ou non. Si ce n'est pas le cas, alors la valeur
+  liée à @str@ est convertie en minuscules:
 
 > toLowerStr [] = []
 > toLowerStr str = map toLower str
 
-  Note that @str@ above is similar to @_@ in that it will match anything; the
-  only difference is that the value matched is also given a name.
+  Notez que @str@ ci-dessus est similaire à @_@ car il intercepte tout; la seule
+  différence est que la valeur détectée se voit donnée un nom.
 
   \sshd{{\ensuremath $n + k$} Patterns}\label{plus-patterns}
 
-  This (sometimes controversial) pattern-matching facility makes it easy to match
-  certain kinds of numeric expressions. The idea is to define a base case (the
-  ``$n$'' portion) with a constant number for matching, and then to define other
-  matches (the ``$k$'' portion) as additives to the base case. Here is a rather
-  inefficient way of testing if a number is even or not:
+  Ce mécanisme de motifs de correspondance (parfois controversé) facilite la mise en correspondance
+  de certains types d'expressions numériques. L'idée est de définir un cas de base (la partie
+  ``$n$'') avec un nombre constant pour la correspondance, et ensuite de définir d'autres correspondances
+  (la partie ``$k$'') comme des additions au cas de base. Voici une façon plutôt inefficace de vérifier
+  si un nombre est pair ou non:
 
 > isEven 0 = True
 > isEven 1 = False
 > isEven (n + 2) = isEven n
 
-  \sshd{Argument Capture}\label{argument-capture}
+  \sshd{Capture des arguments}\label{argument-capture}
 
-  Argument capture is useful for pattern-matching a value \emph{and} using it,
-  without declaring an extra variable. Use an `|@|' symbol in between the
-  pattern to match and the variable to bind the value to. This facility is
-  used below to bind the head of the list in @l@ for display, while also
-  binding the entire list to @ls@ in order to compute its length:
+  La capture d'argument est utile pour détecter une valeur \emph{et} l'utiliser,
+  sans devoir déclarer de variable supplémentaire. Utiliser un symbole `|@|' entre le motif
+  à détecter et la variable pour lui affecter une valeur. Ce mécanisme est utilisé ci-dessous
+  pour affecter la tête de la liste à @l@ afin de l'afficher, tout en affectant également
+  l'ensemble de la liste à @ls@ dans le but de calculer sa longueur:
 
-> len ls@(l:_) = "List starts with " ++
->   show l ++ " and is " ++
->   show (length ls) ++ " items long."
-> len [] = "List is empty!"
+> len ls@(l:_) = "La liste commence par " ++
+>   show l ++ " et est longue de " ++
+>   show (length ls) ++ " éléments."
+> len [] = "La liste est vide!"
 
-  \sshd{Guards}\label{function-guards}
+  \sshd{Conditions d'entrées}\label{function-guards}
 
-  Boolean functions can be used as ``guards'' in function definitions along with
-  pattern matching. An example without pattern matching:
+  Les fonctions booléennes peuvent être utilisées comme des ``conditions d'entrée'' dans les définitions de fonction
+  grâce notamment aux motifs de correspondance. Un exemple sans motif de correspondance:
 
 > which n
 >   | n == 0 = "zero!"
->   | even n = "even!"
->   | otherwise = "odd!"
+>   | even n = "pair!"
+>   | otherwise = "impair!"
 
-    Notice @otherwise@ -- it always evaluates to @True@ and can be used to specify
-    a ``default'' branch.
+    Notez @otherwise@ -- qui vaut toujours to @True@ et peut être utilisé to spécifier un branchement par ``défaut''.
 
-    Guards can be used with patterns. Here is a function that determines if the
-    first character in a string is upper or lower case:
+    Les conditions d'entrées peuvent être utilisées avec les motifs. Ici une fonction qui détermine
+    si le premier caractère d'une chaîne est une majuscule ou une minuscule:
 
-> what [] = "empty string!"
+> what [] = "chaîne vide!"
 > what (c:_)
->   | isUpper c = "upper case!"
->   | isLower c = "lower case"
->   | otherwise = "not a letter!"
+>   | isUpper c = "majuscule!"
+>   | isLower c = "minuscule!"
+>   | otherwise = "pas une lettre!"
 
-  \sshd{Matching \& Guard Order}\label{function-matching-order}
+  \sshd{Correspondance \& ordre des conditions d'entrées}\label{function-matching-order}
 
-  Pattern-matching proceeds in top to bottom order. Similarly, guard expressions
-  are tested from top to bottom. For example, neither of these functions would
-  be very interesting:
+  Les motifs de correspondance s'évaluent dans l'ordre de haut en bas. De la même façon, les
+  conditions d'entrée sont testées de haut en bas. Par exemple, aucune de ces fonctions ne serait
+  très intéréssante:
 
 > allEmpty _ = False
 > allEmpty [] = True
@@ -363,7 +356,7 @@ interpreter to play with code samples shown.
 >   | otherwise = False
 >   | n `div` 2 == 0 = True
 
-  \sshd{Record Syntax}\label{matching-record-syntax}
+  \sshd{Syntaxe des enregistrements}\label{matching-record-syntax}
 
   Normally pattern matching occurs based on the position of arguments in the
   value being matched. Types declared with record syntax, however, can match
@@ -379,14 +372,13 @@ interpreter to play with code samples shown.
 
 \end{comment}
 
-  \noindent we can match on @green@ only:
+  \noindent Une seule correspondance possible sur une occurence de @green@:
 
 > isGreenZero (C { green = 0 }) = True
 > isGreenZero _ = False
 
-  Argument capture is possible with this syntax, although it gets clunky.
-  Continuing the above, we now define a @Pixel@ type and a function to replace
-  values with non-zero @green@ components with all black:
+  La capture d'argument est possible avec cette syntaxe, même si çà peut devenir bizarre.
+  Nous pouvons définir un type @Pixel@ et une fonction pour remplacer des valeurs avec des composantes @green@ différente de zéro avec tout en noir @TODO:Vérifier:
 
 > data Pixel = P Color
 
@@ -396,26 +388,26 @@ interpreter to play with code samples shown.
 
 \end{comment}
 
-> -- Color value untouched if green is 0
+> -- Valeur de la couleur non altéré si green est égal à zéro
 > setGreen (P col@(C { green = 0 })) = P col
 > setGreen _ = P (C 0 0 0)
 
-  \sshd{Lazy Patterns}\label{lazy-patterns}
+  \sshd{Motifs fainéants}\label{lazy-patterns}
 
-  This syntax, also known as \emph{irrefutable} patterns, allows pattern matches
-  which always succeed. That means any clause using the pattern will succeed,
-  but if it tries to actually use the matched value an error may occur. This is
-  generally useful when an action should be taken on the \emph{type} of a
-  particular value, even if the value isn't present.
+  Cette syntaxe, également connue comme motifs \emph{irréfutables}, autorise des motifs
+  qui seront toujours détectés. Ceci implique que toute clause correspondra mais si l'on
+  essaie d'utiliser la valeur, alors une erreur peut se produire. C'est généralement utile
+  quand on doit déclencher une action pour un \emph{type} et une valeur précise y compris
+  si cette valeur n'existe pas.
 
-  For example, define a class for default values:
+  Par exemple, on peut définir une classe avec des valeurs par défaut:
 
 > class Def a where
 >   defValue :: a -> a
 
-  The idea is you give @defValue@ a value of the right type and it gives you
-  back a default value for that type. Defining instances for basic types is
-  easy:
+  Le principe est de donner à @defValue@ une valeur du bon type ce qui retournera
+  une valeur par défaut pour ce type. Définir des instances pour les types de base
+  est simple:
 
 > instance Def Bool where
 >   defValue _ = False
@@ -423,59 +415,59 @@ interpreter to play with code samples shown.
 > instance Def Char where
 >   defValue _ = ' '
 
-  @Maybe@ is a littler trickier, because we want to get a default value for the
-  type, but the constructor might be @Nothing@. The following definition would
-  work, but it's not optimal since we get @Nothing@ when @Nothing@ is passed in.
+  @Maybe@ est un peu plus subtil, car on souhaite obtenir une valeur par défaut pour le type,
+  alors que le constructeur peut être @Nothing@. La définition suivante marcherait, mais ce
+  n'est pas optimal car on obtient @Nothing@ dés lors que @Nothing@ est passé en entrée.
 
 < instance Def a => Def (Maybe a) where
 <   defValue (Just x) = Just (defValue x)
 <   defValue Nothing = Nothing
 
-  We'd rather get a {\tt Just (\rm\emph{default value}\tt)\rm} back instead.
-  Here is where a lazy pattern saves us -- we can pretend that we've matched
-  @Just x@ and use that to get a default value, even if @Nothing@ is given:
+  Il vaudrait mieux obtenir un {\tt Just (\rm\emph{default value}\tt)\rm} à la place.
+  Voici comment un "motif fainéant" nous sauve -- On peut faire comme ci on avait
+  détecté @Just x@ et utiliser ceci pour avoir une valeur par défaut, même si @Nothing@ est donné:
 
 > instance Def a => Def (Maybe a) where
 >   defValue ~(Just x) = Just (defValue x)
 
-  As long as the value @x@ is not actually evaluated, we're safe. None of the
-  base types need to look at @x@ (see the ``@_@'' matches they use), so things
-  will work just fine.
+  Tant que la valeur @x@ n'a pas encore été évaluée, tout va bien. Aucun des types de base
+  ne nécessite de voir @x@ (voir la correspondance ``@_@'' qu'ils utilisent), donc cela
+  fonctionnera sans problème.
 
-  One wrinkle with the above is that we must provide type annotations in the
-  interpreter or the code when using a @Nothing@ constructor. @Nothing@ has type
-  @Maybe a@ but, if not enough other information is available, Haskell must be
-  told what @a@ is. Some example default values:
+  Un souci avec ce qui précède provient du fait que l'on doit annoter les types
+  au niveau de l'interpréteur ou du code quand on utilise un constructeur @Nothing@. @Nothing@ a
+  le type @Maybe a@ mais, si il n'y a pas suffisamment d'information disponible, on doit indiquer
+  à Haskell le type correspondant à @a@. Quelques exemples de valeurs par défaut:
 
 > -- Return "Just False"
 > defMB = defValue (Nothing :: Maybe Bool)
 > -- Return "Just ' '"
 > defMC = defValue (Nothing :: Maybe Char)
 
-\shd{List Comprehensions}\label{list-comprehensions}
+\shd{Constructions de Listes}\label{list-comprehensions}
 
-  A list comprehension consists of four types of elements: \emph{generators},
-  \emph{guards}, \emph{local bindings}, and \emph{targets}. A list comprehension
-  creates a list of target values based on the generators and guards given. This
-  comprehension generates all squares:
+  Une construction de liste consiste en quatre types d'éléments: des \emph{générateurs},
+  des \emph{conditions d'entrée}, \emph{des affectations locales}, et des \emph{cibles}. Une construction
+  de liste créé une liste de valeurs cibles à partir des générateurs et conditions d'entrées spécifiées.
+
+  Cette construction génère tous les carrés:
 
 > squares = [x * x | x <- [1..]]
 
-  @x <- [1..]@ generates a list of all @Integer@ values and puts them in @x@,
-  one by one. @x * x@ creates each element of the list by multiplying @x@ by
-  itself.
+  @x <- [1..]@ génère une liste de toutes les valeurs entières @Integer@ et les affecte à @x@,
+  une par une. @x * x@ créé chaque élément de la liste en multipliant @x@ avec lui même.
 
-  Guards allow certain elements to be excluded. The following shows how divisors
-  for a given number (excluding itself) can be calculated. Notice how @d@ is
-  used in both the guard and target expression.
+  Les conditions permettent d'exclure certains éléments. Ce qui suit montre comment les diviseurs
+   d'un nombre donné (excluant ce nombre) peuvent être calculés. Notez comment @d@ est utilisé à la
+   fois dans la condition d'entrée et dans l'expression cible.
 
 > divisors n =
 >   [d | d <- [1..(n `div` 2)]
 >      , n `mod` d == 0]
 
-  Local bindings provide new definitions for use in the generated expression or
-  subsequent generators and guards. Below, @z@ is used to represent the minimum
-  of @a@ and @b@:
+  Les affectations locales fournissent de nouvelles définitions pouvant être utilisées dans l'expression
+  générée ou par les générateurs et conditions d'entrées déclarés à partir de là. Ci-dessous, @z@ est utilisé pour
+  représenter le minimum de @a@ et @b@:
 
 > strange = [(a,z) | a <-[1..3]
 >                  , b <-[1..3]
@@ -483,35 +475,37 @@ interpreter to play with code samples shown.
 >                  , let z = min a b
 >                  , z < c ]
 
-  Comprehensions are not limited to numbers. Any list will do. All upper case
-  letters can be generated:
+  Les constructions ne sont pas limitées aux nombres. N'importe quelle liste fera l'affaire. L'ensemble des
+  lettres majuscules peut être généré ainsi:
 
 > ups =
 >   [c | c <- [minBound .. maxBound]
 >      , isUpper c]
 
-  Or, to find all occurrences of a particular break value @br@ in a list @word@
-  (indexing from 0):
+  Ou bien, pour trouver toutes les occurrences d'une valeur d'arrêt particulière @br@ dans une liste de @word@
+  (indexée à partir de 0):
 
 > idxs word br =
 >   [i | (i, c) <- zip [0..] word
 >       , c == br]
 
-  A unique feature of list comprehensions is that pattern matching failures do
-  not cause an error; they are just excluded from the resulting list.
+  Une fonctionnalité unique des constructions de liste est que les erreurs liées aux motifs
+  de correspondance ne sont pas prises en compte; elles sont simplements exclues de la liste
+  des résultats.
 
 \shd{Operators}\label{operators}
 
-  There are very few predefined ``operators'' in Haskell---most that appear
-  predefined are actually syntax (e.g., ``@=@''). Instead, operators are simply
-  functions that take two arguments and have special syntactic support. Any
-  so-called operator can be applied as a prefix function using parentheses:
+  Il y a très peu d'``opérateurs'' prédéfinis en Haskell.  --- la plupart d'entre eux relèvent
+  en fait de la syntaxe (ex: ``@=@''). A la place, ces opérateurs sont simplement des fonctions qui prennent
+  deux arguments et qui ont un support syntaxique particulier.
+
+  De tels opérateurs peuvent être appliqués comme fonction préfixée à condition de les entourer
+  de parenthèses:
 
 < 3 + 4 == (+) 3 4
 
-  To define a new operator, simply define it as a normal function, except the
-  operator appears between the two arguments. Here's one which inserts a
-  comma between two strings and ensures no extra spaces appear:
+  Pour définir un nouvel opérateur, il faut simplement l'implémenter comme une fonction normale, sauf que
+  l'opérateur apparaît entre les deux arguments dans la signature. En voici un qui insère une virgule entre deux chaînes et s'assure qu'aucun espace supplémentaire n'apparaît:
 
 > first ## last =
 >   let trim s = dropWhile isSpace
@@ -522,9 +516,9 @@ interpreter to play with code samples shown.
 < > "  Haskell " ## " Curry "
 < Curry, Haskell
 
-  Of course, full pattern matching, guards, etc. are available in this form.
-  Type signatures are a bit different, though. The operator ``name'' must appear
-  in parentheses:
+  Bien sûr, les motifs de correspondance et conditions d'entrées, etc sont disponibles sous cette forme.
+  Les signatures de Type sont un peu différentes il est vrai. Le ``nom'' de l'opérateur doit apparaître entouré
+  de parenthèses:
 
 > (##) :: String -> String -> String
 
@@ -1513,7 +1507,7 @@ of the @Maybe@ type:
 
 \hd{Contributors}\label{contributors}
 
-  My thanks to those who contributed patches and useful suggestions:
+  Mes remerciements à ceux qui ont contribué des modifications et des suggestions utiles:
 Dave Bayer, Evgenij Belikov, Paul Butler, Jonas Devlieghere, Elisa Firth, Marc Fontaine, Brian
 Gianforcaro, Cale Gibbard, Andrew Harris, Stephen Hicks, Kurt
 Hutchinson, Johan Kiviniemi, Patrik Jansson, Adrian Neumann, Barak
@@ -1522,11 +1516,11 @@ Spiller, Emiel van de Laar, Adam Vogt, Leif Warner, and Jeff Zaroyko.
 
 \hd{Version}\label{version}
 
-  This is version 2.9. The source can be found at GitHub
-  (\url{http://github.com/m4dc4p/cheatsheet}). The latest released
-  version of the PDF can be downloaded from
-  \url{http://cheatsheet.codeslower.com}.  Visit CodeSlower.com
-  (\url{http://blog.codeslower.com/}) for other projects and writings.
+  Ceci est la version 2.9. Les sources peuvent être trouvés sur GitHub
+  (\url{http://github.com/m4dc4p/cheatsheet}). La dernière version publiée
+  du PDF peut être téléchargé depuis
+  \url{http://cheatsheet.codeslower.com}.  Visitez CodeSlower.com
+  (\url{http://blog.codeslower.com/}) pour d'autres projets et articles.
 
 \end{multicols}
 \end{document}
