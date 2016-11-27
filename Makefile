@@ -1,3 +1,4 @@
+#@IgnoreInspection BashAddShebang
 all: CheatSheet.dvi
 all: CheatSheet.pdf
 
@@ -12,7 +13,7 @@ latexflags := -interaction=nonstopmode -file-line-error-style
 latex      := latex $(latexflags)
 pdflatex   := pdflatex $(latexflags)
 
-lhs2TeX := lhs2TeX --verb
+lhs2TeX := /root/.cabal/bin/lhs2TeX --verb
 dvips   := dvips
 
 define run-while-needed
@@ -33,11 +34,11 @@ endef
 %.dvi: %.tex
 	$(call run-while-needed,$(latex))
 
-%.ps: %.dvi
-	$(dvips) "$<"
+#%.ps: %.dvi
+#	$(dvips) "$<"
 
-%.pdf: %.tex
-	$(call run-while-needed,$(pdflatex))
+#%.pdf: %.tex
+#	$(call run-while-needed,$(pdflatex))
 
 .PHONY: clean
 clean:
