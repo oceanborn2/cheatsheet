@@ -518,7 +518,9 @@ le code source dans votre interpréteur pour tester les exemples inclus.
 
   Les symboles autorisés pour définir des opérateurs sont les suivants:
 
-< # $ % & * + . / < = > ? @ \ ^ | - ~
+< # $ % & * + . / < = > ? @ \ ^ | - ~  
+
+
 
   Cependant, il y a plusieurs ``opérateurs'' qui ne peuvent pas être rédéfinis. Ce sont:
   @<-@, @->@ et @=@. Le dernier, @=@, ne peut pas être redéfini seul, mais peut faire partie
